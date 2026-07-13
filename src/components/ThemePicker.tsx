@@ -1,4 +1,5 @@
 import { THEMES, type CardTheme } from '../themes';
+import { Icon } from './Icon';
 import { cx } from './ui';
 
 export function ThemePicker({
@@ -38,8 +39,8 @@ function ThemeSwatch({
       )}
     >
       <div className={cx('p-3', theme.page)}>
-        <div className={cx('rounded-lg px-3 py-2 text-xs font-semibold', theme.header)}>
-          {theme.emoji} {theme.label}
+        <div className={cx('flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold', theme.header)}>
+          <Icon name={theme.icon} className="h-4 w-4" /> {theme.label}
         </div>
         <div className={cx('mt-2 px-3 py-2 text-[10px]', theme.note)}>
           <span className={theme.noteName}>Rafi</span> · so happy for you!

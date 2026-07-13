@@ -1,6 +1,7 @@
 import type { ParsedSignature } from '../protocol';
 import type { CardTheme } from '../themes';
 import { formatUctWithSymbol } from '../lib/format';
+import { Icon } from './Icon';
 import { cx } from './ui';
 
 export function SignatureNote({
@@ -29,7 +30,7 @@ export function SignatureNote({
         {amount > 0n && (
           <span
             className={cx(
-              'shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold',
+              'inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold',
               theme.badge,
             )}
             title={
@@ -38,7 +39,7 @@ export function SignatureNote({
                 : 'This gift claims an amount but carries no transfer proof'
             }
           >
-            {sig.verified ? '✓ ' : '? '}
+            {sig.verified ? <Icon name="check" className="h-3.5 w-3.5" /> : <span aria-hidden>?</span>}
             {formatUctWithSymbol(amount)}
             {!sig.verified && (
               <span className="ml-1 font-normal opacity-70">unverified</span>

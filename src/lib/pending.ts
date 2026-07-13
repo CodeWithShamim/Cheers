@@ -2,7 +2,7 @@
  * Pending-signature safety net.
  *
  * Paying and posting the signature are two separate network actions (pay
- * first, post second — deliberately non-atomic). If the payment succeeded but
+ * first, post second - deliberately non-atomic). If the payment succeeded but
  * posting the card.sign message failed, we persist the fully-built signature
  * here and retry POSTING ONLY on next load. We never re-pay: the transferId
  * in the record proves the payment already happened.
@@ -48,7 +48,7 @@ export class PendingSignatureStore {
 
   add(pending: Omit<PendingSignature, 'createdAt' | 'attempts'>): void {
     const all = this.list();
-    // Same content for the same group is the same failed post — don't duplicate.
+    // Same content for the same group is the same failed post - don't duplicate.
     if (all.some((p) => p.groupId === pending.groupId && p.content === pending.content)) return;
     all.push({ ...pending, createdAt: Date.now(), attempts: 0 });
     this.save(all);
@@ -74,7 +74,7 @@ export class PendingSignatureStore {
       } catch {
         const attempts = pending.attempts + 1;
         if (attempts < MAX_ATTEMPTS) remaining.push({ ...pending, attempts });
-        // else: drop it — poisoned records must not retry forever
+        // else: drop it - poisoned records must not retry forever
       }
     }
     this.save(remaining);

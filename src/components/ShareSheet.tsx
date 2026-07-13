@@ -42,7 +42,7 @@ export function ShareSheet({ url, title }: { url: string; title: string }) {
         </div>
       )}
       <p className="text-xs text-stone-500 dark:text-stone-400">
-        The link contains the card's private invite in the URL <em>hash</em> — it never hits a
+        The link contains the card's private invite in the URL <em>hash</em> - it never hits a
         server log. Anyone with the link can read and sign the card.
       </p>
     </div>

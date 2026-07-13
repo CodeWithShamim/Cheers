@@ -1,8 +1,8 @@
 /**
- * Amount parsing — bigint/base-unit strings only, never floats.
+ * Amount parsing - bigint/base-unit strings only, never floats.
  * Thin wrappers over the SDK's currency utilities with UCT defaults.
  * (Display formatting lives in ./format.ts, which is SDK-free so the app
- * shell doesn't pull the SDK bundle — this module is only imported from
+ * shell doesn't pull the SDK bundle - this module is only imported from
  * code-split pages that load the SDK anyway.)
  */
 import { parseTokenAmount, safeParseTokenAmount } from '@unicitylabs/sphere-sdk';

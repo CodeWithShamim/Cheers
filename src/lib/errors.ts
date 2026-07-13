@@ -12,7 +12,7 @@ export function toHumanError(err: unknown): string {
       case 'SEND_INSUFFICIENT_BALANCE':
         return 'Not enough test tokens for this gift. Tap “Get test tokens” to mint some.';
       case 'CERTIFICATION_UNCONFIRMED':
-        return 'Your gift was sent but the network confirmation is still settling. Do NOT retry the payment — it will complete on its own.';
+        return 'Your gift was sent but the network confirmation is still settling. Do NOT retry the payment - it will complete on its own.';
       case 'AGGREGATOR_ERROR':
         return 'The testnet2 gateway rejected the request. Check that VITE_UNICITY_API_KEY is set (see .env.example) and try again.';
       case 'TRANSPORT_ERROR':
@@ -32,7 +32,7 @@ export function toHumanError(err: unknown): string {
   return 'Something unexpected went wrong. Please try again.';
 }
 
-/** True when a caught send() error means "may already be paid — never re-pay". */
+/** True when a caught send() error means "may already be paid - never re-pay". */
 export function isPaymentIndeterminate(err: unknown): boolean {
   return isSphereError(err) && err.code === 'CERTIFICATION_UNCONFIRMED';
 }

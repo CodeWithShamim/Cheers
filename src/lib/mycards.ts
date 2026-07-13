@@ -33,7 +33,7 @@ export function listMyCards(): MyCardEntry[] {
 
 /**
  * Insert or update by groupId. Role upgrades only (received > created > signed
- * priority is not meaningful — instead: never downgrade 'created'/'received'
+ * priority is not meaningful - instead: never downgrade 'created'/'received'
  * to 'signed', since the stronger relationship is the interesting one).
  */
 export function rememberCard(entry: Omit<MyCardEntry, 'lastOpened'>): void {

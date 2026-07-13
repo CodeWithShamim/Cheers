@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import { AmountInput } from '../components/AmountInput';
 import { Button, ErrorNote, Field, cx, inputClass } from '../components/ui';
+import { Icon } from '../components/Icon';
 import { formatUctWithSymbol, safeParseUct } from '../lib/amounts';
 import { toHumanError } from '../lib/errors';
 import type { CardLinkPayload } from '../link';
@@ -63,17 +64,19 @@ export function SignPanel({
   if (phase.kind === 'done') {
     return (
       <div className={cx('animate-pop-in rounded-2xl p-6 text-center', theme.banner)}>
-        <div className="text-4xl">🥂</div>
-        <h2 className="font-display mt-2 text-xl font-bold">You're on the card!</h2>
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
+          <Icon name="check" className="h-8 w-8" />
+        </span>
+        <h2 className="font-display mt-3 text-xl font-bold">You're on the card!</h2>
         {phase.indeterminate && (
           <p className="mt-2 text-sm opacity-80">
-            Your gift is still being confirmed by the network — it will complete on its own.
+            Your gift is still being confirmed by the network, it will complete on its own.
             Don't send it again.
           </p>
         )}
         {phase.queued && (
           <p className="mt-2 text-sm opacity-80">
-            Your payment went through but the relay didn't take the note yet — we saved it and
+            Your payment went through but the relay didn't take the note yet. We saved it and
             will post it automatically next time you open Cheers.
           </p>
         )}
@@ -105,14 +108,14 @@ export function SignPanel({
                   i > activeIndex && 'bg-stone-300 text-stone-600 dark:bg-stone-700 dark:text-stone-300',
                 )}
               >
-                {i < activeIndex ? '✓' : i + 1}
+                {i < activeIndex ? <Icon name="check" className="h-3.5 w-3.5" /> : i + 1}
               </span>
               <span className={i === activeIndex ? 'font-semibold' : 'opacity-70'}>{step.label}</span>
             </li>
           ))}
         </ol>
         <p className="mt-4 text-xs opacity-60">
-          The gift moves straight from your wallet to {meta.recipient} — Cheers never holds it.
+          The gift moves straight from your wallet to {meta.recipient}. Cheers never holds it.
         </p>
       </div>
     );
@@ -123,7 +126,7 @@ export function SignPanel({
       <div className="flex items-center justify-between">
         <h2 className="font-display text-xl font-bold">Sign the card</h2>
         <Button variant="ghost" onClick={onClose} aria-label="Close signing panel">
-          ✕
+          <Icon name="close" className="h-5 w-5" />
         </Button>
       </div>
 
@@ -134,7 +137,7 @@ export function SignPanel({
       )}
 
       <div className="mt-4 space-y-5">
-        <Field label="Your name" hint={nametag ? `Prefilled from your nametag @${nametag}` : 'Any name — no account needed.'}>
+        <Field label="Your name" hint={nametag ? `Prefilled from your nametag @${nametag}` : 'Any name - no account needed.'}>
           <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} maxLength={40} placeholder="Rafi" />
         </Field>
 
@@ -168,7 +171,7 @@ export function SignPanel({
           </div>
         </div>
 
-        <Field label="Chip in" hint={`Your balance: ${formatUctWithSymbol(uctBalance)} — sent directly to ${meta.recipient}, peer-to-peer.`}>
+        <Field label="Chip in" hint={`Your balance: ${formatUctWithSymbol(uctBalance)} - sent directly to ${meta.recipient}, peer-to-peer.`}>
           <AmountInput
             value={amountStr}
             onChange={setAmountStr}
@@ -182,7 +185,7 @@ export function SignPanel({
               Not enough test tokens for this gift.
             </p>
             <p className="mt-1 text-xs text-amber-800/80 dark:text-amber-300/80">
-              This is a testnet — mint yourself some UCT (free, no faucet needed) and then send the gift.
+              This is a testnet - mint yourself some UCT (free, no faucet needed) and then send the gift.
             </p>
             {mintError && (
               <p role="alert" className="mt-2 text-xs text-red-700 dark:text-red-400">{mintError}</p>

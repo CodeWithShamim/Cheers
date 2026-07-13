@@ -3,6 +3,7 @@ import { WalletGate } from '../components/WalletGate';
 import { ShareSheet } from '../components/ShareSheet';
 import { ThemePicker } from '../components/ThemePicker';
 import { Button, ErrorNote, Field, Spinner, cx, inputClass } from '../components/ui';
+import { Icon } from '../components/Icon';
 import { safeParseUct } from '../lib/amounts';
 import { toHumanError } from '../lib/errors';
 import { OCCASIONS, type Occasion } from '../protocol';
@@ -37,7 +38,7 @@ function CreateWizard() {
   const [created, setCreated] = useState<CreatedCard | null>(null);
   const debounceRef = useRef<number>();
 
-  // Debounced live nametag resolution — the recipient must exist on-network
+  // Debounced live nametag resolution - the recipient must exist on-network
   // before we let the card be created (gifts go straight to their wallet).
   useEffect(() => {
     const name = recipient.trim().toLowerCase().replace(/^@/, '');
@@ -67,15 +68,17 @@ function CreateWizard() {
     return (
       <div className="mx-auto max-w-xl px-4 py-10">
         <div className="text-center">
-          <div className="text-5xl">🎉</div>
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-500 text-white shadow-lg shadow-violet-500/30">
+            <Icon name="sparkles" className="h-8 w-8" />
+          </span>
           <h1 className="font-display mt-3 text-3xl font-bold">The card is live!</h1>
           <p className="mt-2 text-stone-600 dark:text-stone-400">
-            Share this link with everyone who should sign — every signature and gift lands on the
+            Share this link with everyone who should sign - every signature and gift lands on the
             card in real time.
           </p>
           {!created.dmSent && (
             <p className="mx-auto mt-3 max-w-md rounded-xl bg-amber-100 px-4 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-              Heads-up: we couldn't DM the recipient the link automatically — send it to them
+              Heads-up: we couldn't DM the recipient the link automatically - send it to them
               yourself when the card is ready to open.
             </p>
           )}
@@ -123,12 +126,12 @@ function CreateWizard() {
           }
         }}
       >
-        {/* Step 1 — who */}
+        {/* Step 1 - who */}
         <fieldset className="space-y-4">
           <legend className="font-display text-lg font-semibold">1 · Who is it for?</legend>
           <Field
             label="Their Unicity nametag"
-            hint="Gifts go straight to this wallet — the nametag must already be registered."
+            hint="Gifts go straight to this wallet - the nametag must already be registered."
             error={
               resolveState.kind === 'missing'
                 ? `@${resolveState.nametag} doesn't exist on the network yet. Ask them to register it in their wallet first.`
@@ -148,7 +151,11 @@ function CreateWizard() {
               />
               <span className="absolute inset-y-0 right-3.5 flex items-center text-sm">
                 {resolveState.kind === 'checking' && <Spinner className="h-4 w-4 text-stone-400" />}
-                {resolveState.kind === 'found' && <span className="text-emerald-600">✓ found</span>}
+                {resolveState.kind === 'found' && (
+                  <span className="inline-flex items-center gap-1 text-emerald-600">
+                    <Icon name="check" className="h-4 w-4" /> found
+                  </span>
+                )}
               </span>
             </div>
           </Field>
@@ -163,7 +170,7 @@ function CreateWizard() {
           </Field>
         </fieldset>
 
-        {/* Step 2 — what */}
+        {/* Step 2 - what */}
         <fieldset className="space-y-4">
           <legend className="font-display text-lg font-semibold">2 · The occasion</legend>
           <div role="radiogroup" aria-label="Occasion" className="flex flex-wrap gap-2">
@@ -175,13 +182,13 @@ function CreateWizard() {
                 aria-checked={occasion === o}
                 onClick={() => setOccasion(o)}
                 className={cx(
-                  'press rounded-full border px-4 py-2 text-sm font-semibold',
+                  'press inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold',
                   occasion === o
                     ? 'border-amber-500 bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200'
                     : 'border-stone-300 text-stone-600 dark:border-stone-700 dark:text-stone-300',
                 )}
               >
-                {OCCASION_META[o].emoji} {OCCASION_META[o].label}
+                <Icon name={OCCASION_META[o].icon} className="h-4 w-4" /> {OCCASION_META[o].label}
               </button>
             ))}
           </div>
@@ -196,7 +203,7 @@ function CreateWizard() {
           </Field>
           <Field
             label="Suggested gift (optional)"
-            hint="Shown to signers as a starting point — they can give any amount, or none."
+            hint="Shown to signers as a starting point - they can give any amount, or none."
             error={suggestedParsed === null ? 'Enter a plain number like 5 or 1.5.' : null}
           >
             <div className="relative">
@@ -212,14 +219,16 @@ function CreateWizard() {
           </Field>
         </fieldset>
 
-        {/* Step 3 — look */}
+        {/* Step 3 - look */}
         <fieldset className="space-y-4">
           <legend className="font-display text-lg font-semibold">3 · Pick a look</legend>
           <ThemePicker value={theme} onChange={setTheme} />
           {/* Live preview */}
           <div className={cx('rounded-2xl p-4', getTheme(theme).page)}>
             <div className={cx('rounded-xl px-5 py-6 text-center', getTheme(theme).header)}>
-              <div className="text-3xl">{OCCASION_META[occasion].emoji}</div>
+              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-white/20">
+                <Icon name={OCCASION_META[occasion].icon} className="h-6 w-6" />
+              </span>
               <div className={cx('mt-1 text-xl font-bold', getTheme(theme).title)}>
                 {titleValue || 'Your title here'}
               </div>

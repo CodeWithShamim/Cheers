@@ -1,5 +1,6 @@
-/** Tiny shared UI kit — consistent radius/shadow/press language everywhere. */
+/** Tiny shared UI kit: consistent radius/shadow/press language everywhere. */
 import { useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { Icon } from './Icon';
 
 export function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ');
@@ -52,7 +53,13 @@ export function CopyButton({ text, label = 'Copy', className }: { text: string; 
         setTimeout(() => setCopied(false), 1600);
       }}
     >
-      {copied ? '✓ Copied' : label}
+      {copied ? (
+        <>
+          <Icon name="check" className="h-4 w-4" /> Copied
+        </>
+      ) : (
+        label
+      )}
     </Button>
   );
 }

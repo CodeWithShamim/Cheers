@@ -1,5 +1,5 @@
 /**
- * Singleton Sphere client — lazy, browser-only.
+ * Singleton Sphere client - lazy, browser-only.
  *
  * ALL SDK imports here are dynamic: the SDK (1.7 MB) and its relay
  * connections only load on the first getSphereInit() call, so the landing
@@ -20,7 +20,7 @@ function getApiKey(): string {
   const key = import.meta.env.VITE_UNICITY_API_KEY as string | undefined;
   if (!key) {
     throw new Error(
-      'Missing VITE_UNICITY_API_KEY. Copy .env.example to .env — the testnet2 key in it is public.',
+      'Missing VITE_UNICITY_API_KEY. Copy .env.example to .env - the testnet2 key in it is public.',
     );
   }
   return key;

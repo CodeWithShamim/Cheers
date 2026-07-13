@@ -1,6 +1,6 @@
 /**
  * App-level wallet state (zustand). The Sphere client itself stays in
- * src/sphere/client.ts — this store mirrors just what the UI renders.
+ * src/sphere/client.ts - this store mirrors just what the UI renders.
  */
 import { create } from 'zustand';
 import type { Asset } from '@unicitylabs/sphere-sdk';

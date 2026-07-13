@@ -1,4 +1,4 @@
-# 🥂 Cheers — group cards with real money inside
+# Cheers 🥂  group cards with real money inside
 
 **Cheers** is a collaborative greeting card where the gift is real. Someone starts a card for
 `@sara` — a birthday, a farewell, a congrats — and shares one link. Every friend who opens it

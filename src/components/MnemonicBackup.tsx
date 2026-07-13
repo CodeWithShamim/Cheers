@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'react';
 import { getSphere } from '../sphere/client';
 import { Button, CopyButton, ErrorNote, Spinner } from './ui';
+import { Icon } from './Icon';
 
 export function MnemonicBackup({
   onConfirmed,
@@ -49,7 +50,7 @@ export function MnemonicBackup({
         <h2 className="font-display text-2xl font-semibold">Save your recovery phrase</h2>
         <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
           Your wallet lives only in this browser. These {words.length} words are the{' '}
-          <strong>only</strong> way to recover it — if this browser data is cleared and you
+          <strong>only</strong> way to recover it - if this browser data is cleared and you
           haven't saved them, any tokens in the wallet are gone.
         </p>
       </div>
@@ -65,10 +66,10 @@ export function MnemonicBackup({
         </ol>
         {!revealed && (
           <button
-            className="press absolute inset-0 flex items-center justify-center rounded-2xl bg-stone-100/40 font-semibold text-stone-700 dark:bg-stone-950/40 dark:text-stone-200"
+            className="press absolute inset-0 flex items-center justify-center gap-2 rounded-2xl bg-stone-100/40 font-semibold text-stone-700 dark:bg-stone-950/40 dark:text-stone-200"
             onClick={() => setRevealed(true)}
           >
-            👁 Tap to reveal
+            <Icon name="eye" className="h-5 w-5" /> Tap to reveal
           </button>
         )}
       </div>
@@ -83,7 +84,13 @@ export function MnemonicBackup({
             setCopied(true);
           }}
         >
-          {copied ? '✓ In clipboard' : 'Copy & mark as saved'}
+          {copied ? (
+            <>
+              <Icon name="check" className="h-4 w-4" /> In clipboard
+            </>
+          ) : (
+            'Copy & mark as saved'
+          )}
         </Button>
       </div>
 
@@ -99,7 +106,7 @@ export function MnemonicBackup({
 
       <div className="flex items-center gap-3">
         <Button disabled={!revealed || !copied} onClick={onConfirmed}>
-          I saved it — continue
+          I saved it - continue
         </Button>
         {onRestoreInstead && (
           <Button variant="ghost" onClick={onRestoreInstead}>

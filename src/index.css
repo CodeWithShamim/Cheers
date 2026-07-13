@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Warm paper — never default-Tailwind-gray */
+    /* Warm paper - never default-Tailwind-gray */
     --ink: 28 25 23; /* stone-900 */
     --paper: 250 248 244;
     --accent: 190 62 40; /* toasted terracotta */

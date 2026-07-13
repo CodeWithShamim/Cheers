@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { MnemonicBackup } from '../components/MnemonicBackup';
 import { WalletGate } from '../components/WalletGate';
 import { Button, CopyButton, ErrorNote, Field, cx, inputClass } from '../components/ui';
+import { Icon } from '../components/Icon';
 import { toHumanError } from '../lib/errors';
 import { restoreFromMnemonic } from '../sphere/client';
 import { checkNametag, isMnemonicValid, mintUct, registerNametag } from '../sphere/wallet';
@@ -29,7 +30,7 @@ function WalletBody() {
       <div>
         <h1 className="font-display text-3xl font-bold">Your wallet</h1>
         <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
-          Created and stored only in this browser. Testnet2 — tokens have no real value.
+          Created and stored only in this browser. Testnet2 - tokens have no real value.
         </p>
       </div>
 
@@ -53,12 +54,12 @@ function WalletBody() {
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg font-semibold">Balances</h2>
           <Button variant="ghost" onClick={() => void refreshAssets()}>
-            ↻ Refresh
+            <Icon name="refresh" className="h-4 w-4" /> Refresh
           </Button>
         </div>
         {assets.length === 0 ? (
           <p className="text-sm text-stone-500 dark:text-stone-400">
-            No tokens yet — mint some test UCT below.
+            No tokens yet - mint some test UCT below.
           </p>
         ) : (
           <ul className="divide-y divide-stone-100 dark:divide-stone-800">
@@ -123,11 +124,11 @@ function NametagSection({
         setOk(result.valid && result.available === true);
         setAvailability(
           result.valid && result.available
-            ? `@${draft.trim().toLowerCase().replace(/^@/, '')} is available ✓`
+            ? `@${draft.trim().toLowerCase().replace(/^@/, '')} is available`
             : (result.reason ?? null),
         );
       } catch {
-        setAvailability('Could not check availability — network hiccup.');
+        setAvailability('Could not check availability - network hiccup.');
         setOk(false);
       }
     }, 500);
@@ -201,7 +202,7 @@ function MintSection({ onMinted }: { onMinted: () => void }) {
     <div className="rounded-xl bg-stone-50 p-4 dark:bg-stone-800/60">
       <h3 className="text-sm font-semibold">Get test tokens</h3>
       <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
-        There's no faucet on testnet2 — you mint your own UCT, straight into this wallet.
+        There's no faucet on testnet2 - you mint your own UCT, straight into this wallet.
       </p>
       <div className="mt-3 flex gap-2">
         <input
@@ -231,7 +232,11 @@ function MintSection({ onMinted }: { onMinted: () => void }) {
           Mint UCT
         </Button>
       </div>
-      {done && <p className="mt-2 text-sm text-emerald-600">Minted ✓ — tokens are in your wallet.</p>}
+      {done && (
+        <p className="mt-2 flex items-center gap-1.5 text-sm text-emerald-600">
+          <Icon name="check" className="h-4 w-4" /> Minted. Tokens are in your wallet.
+        </p>
+      )}
       {error && <div className="mt-2"><ErrorNote>{error}</ErrorNote></div>}
     </div>
   );
@@ -247,7 +252,7 @@ function RestoreSection({ onDone }: { onDone: () => void }) {
     <div className="space-y-3">
       <Field
         label="Recovery phrase"
-        hint="12 or 24 words. This REPLACES the wallet currently in this browser — back it up first if it holds anything."
+        hint="12 or 24 words. This REPLACES the wallet currently in this browser - back it up first if it holds anything."
         error={error}
       >
         <textarea

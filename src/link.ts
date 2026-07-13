@@ -2,7 +2,7 @@
  * Card share-link codec.
  *
  * The payload rides the URL HASH fragment (`/c/#<base64url(json)>`) so the
- * group id + invite code never appear in any server log — the app is a static
+ * group id + invite code never appear in any server log - the app is a static
  * SPA and the fragment never leaves the browser.
  *
  * Pure module: no SDK, no window access in encode/decode.

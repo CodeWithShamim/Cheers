@@ -4,12 +4,15 @@
  * scanner picks them up.
  */
 import type { Occasion } from './protocol';
+import type { IconName } from './components/Icon';
 
 export interface CardTheme {
   key: string;
   label: string;
   /** Emoji used in pickers and as default header art. */
   emoji: string;
+  /** Solid icon used in pickers and card headers. */
+  icon: IconName;
   /** Full-page background behind the card. */
   page: string;
   /** Card header block. */
@@ -35,6 +38,7 @@ export const THEMES: Record<string, CardTheme> = {
     key: 'sunset',
     label: 'Sunset',
     emoji: '🌅',
+    icon: 'sun',
     page: 'bg-gradient-to-b from-orange-100 via-rose-50 to-amber-50 dark:from-[#2a1410] dark:via-[#221016] dark:to-[#1c1208]',
     header:
       'bg-gradient-to-br from-orange-400 via-rose-400 to-amber-300 dark:from-orange-700 dark:via-rose-800 dark:to-amber-700 text-white shadow-lg shadow-orange-900/20',
@@ -53,6 +57,7 @@ export const THEMES: Record<string, CardTheme> = {
     key: 'confetti',
     label: 'Confetti',
     emoji: '🎉',
+    icon: 'sparkles',
     page: 'bg-gradient-to-b from-sky-50 via-fuchsia-50 to-yellow-50 dark:from-[#101a26] dark:via-[#1d1226] dark:to-[#221d0e]',
     header:
       'bg-gradient-to-br from-sky-400 via-fuchsia-400 to-yellow-300 dark:from-sky-700 dark:via-fuchsia-700 dark:to-yellow-600 text-white shadow-lg shadow-fuchsia-900/20',
@@ -71,6 +76,7 @@ export const THEMES: Record<string, CardTheme> = {
     key: 'midnight',
     label: 'Midnight',
     emoji: '🌙',
+    icon: 'moon',
     page: 'bg-gradient-to-b from-indigo-950 via-slate-950 to-indigo-950 text-slate-100',
     header:
       'bg-gradient-to-br from-indigo-800 via-slate-900 to-violet-900 text-indigo-50 border border-indigo-700/40 shadow-xl shadow-indigo-950/60',
@@ -87,6 +93,7 @@ export const THEMES: Record<string, CardTheme> = {
     key: 'garden',
     label: 'Garden',
     emoji: '🌿',
+    icon: 'leaf',
     page: 'bg-gradient-to-b from-emerald-50 via-lime-50 to-teal-50 dark:from-[#0d1f16] dark:via-[#14200e] dark:to-[#0c1e1b]',
     header:
       'bg-gradient-to-br from-emerald-500 via-green-500 to-lime-400 dark:from-emerald-800 dark:via-green-800 dark:to-lime-700 text-white shadow-lg shadow-emerald-900/20',
@@ -105,6 +112,7 @@ export const THEMES: Record<string, CardTheme> = {
     key: 'minimal',
     label: 'Minimal',
     emoji: '🕊️',
+    icon: 'star',
     page: 'bg-[#faf8f4] dark:bg-[#171412]',
     header:
       'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 border border-stone-200 dark:border-stone-800 shadow-sm',
@@ -125,10 +133,13 @@ export function getTheme(key: string | undefined): CardTheme {
   return THEMES[key ?? DEFAULT_THEME] ?? THEMES[DEFAULT_THEME]!;
 }
 
-export const OCCASION_META: Record<Occasion, { label: string; emoji: string; defaultTitle: (name: string) => string }> = {
-  birthday: { label: 'Birthday', emoji: '🎂', defaultTitle: (n) => `Happy birthday, ${n}!` },
-  farewell: { label: 'Farewell', emoji: '👋', defaultTitle: (n) => `Farewell, ${n} — we'll miss you!` },
-  congrats: { label: 'Congrats', emoji: '🏆', defaultTitle: (n) => `Congratulations, ${n}!` },
-  thanks: { label: 'Thank you', emoji: '💐', defaultTitle: (n) => `Thank you, ${n}!` },
-  custom: { label: 'Something else', emoji: '💌', defaultTitle: (n) => `A card for ${n}` },
+export const OCCASION_META: Record<
+  Occasion,
+  { label: string; emoji: string; icon: IconName; defaultTitle: (name: string) => string }
+> = {
+  birthday: { label: 'Birthday', emoji: '🎂', icon: 'cake', defaultTitle: (n) => `Happy birthday, ${n}!` },
+  farewell: { label: 'Farewell', emoji: '👋', icon: 'suitcase', defaultTitle: (n) => `Farewell, ${n}, we'll miss you!` },
+  congrats: { label: 'Congrats', emoji: '🏆', icon: 'trophy', defaultTitle: (n) => `Congratulations, ${n}!` },
+  thanks: { label: 'Thank you', emoji: '💐', icon: 'flower', defaultTitle: (n) => `Thank you, ${n}!` },
+  custom: { label: 'Something else', emoji: '💌', icon: 'mail', defaultTitle: (n) => `A card for ${n}` },
 };

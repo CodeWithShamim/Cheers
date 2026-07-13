@@ -1,5 +1,5 @@
 /**
- * Card operations — the bridge between the pure protocol/link modules and
+ * Card operations - the bridge between the pure protocol/link modules and
  * the live network. A card IS a private NIP-29 group: creating, opening,
  * signing and thanking are all group-message operations; the chip-in itself
  * is a direct peer-to-peer payment (never pooled, never custodied).
@@ -113,12 +113,12 @@ export async function createCard(input: CreateCardInput): Promise<CreatedCard> {
     theme: input.theme,
   });
 
-  // Heads-up DM to the recipient — best-effort: the link is shown regardless.
+  // Heads-up DM to the recipient - best-effort: the link is shown regardless.
   let dmSent = false;
   try {
     await sphere.communications.sendDM(
       recipient,
-      `🎉 Friends are signing a card for you — open it here: ${url}`,
+      `🎉 Friends are signing a card for you - open it here: ${url}`,
     );
     dmSent = true;
   } catch {
@@ -161,7 +161,7 @@ export async function openCard(payload: CardLinkPayload): Promise<OpenedCard> {
   const joined = await gc.joinGroup(payload.groupId, payload.invite);
   if (!joined) {
     throw new InvalidCardLinkError(
-      'This card link is invalid or its invite has expired — ask for a fresh link.',
+      'This card link is invalid or its invite has expired - ask for a fresh link.',
     );
   }
 
@@ -211,7 +211,7 @@ export async function openCard(payload: CardLinkPayload): Promise<OpenedCard> {
 }
 
 /**
- * Re-parse the card from the module's live message cache — used after
+ * Re-parse the card from the module's live message cache - used after
  * onMessage events to produce a fresh ParsedCard cheaply (no relay round-trip).
  */
 export async function reparseCard(
@@ -282,7 +282,7 @@ export async function signCard(input: SignCardInput): Promise<SignCardResult> {
       transferId = result.id;
     } catch (err) {
       if (isPaymentIndeterminate(err)) {
-        // The spend may already be certified on-chain. NEVER re-send — the SDK
+        // The spend may already be certified on-chain. NEVER re-send - the SDK
         // resumes the open intent under the same transferId. We post the
         // signature without a transferId (renders as "unverified").
         paymentIndeterminate = true;
@@ -309,7 +309,7 @@ export async function signCard(input: SignCardInput): Promise<SignCardResult> {
     const posted = await gc.sendMessage(payload.groupId, content);
     if (!posted) throw new Error('relay refused message');
   } catch {
-    // Money (if any) already moved — queue the post, never the payment.
+    // Money (if any) already moved - queue the post, never the payment.
     pendingStore.add({
       groupId: payload.groupId,
       invite: payload.invite,

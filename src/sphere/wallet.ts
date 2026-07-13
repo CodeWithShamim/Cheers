@@ -12,7 +12,7 @@ import {
 import { UCT_COIN_ID, UCT_SYMBOL, parseUct } from '../lib/amounts';
 import { getSphere } from './client';
 
-/** Resolve UCT's hex coin id — registry first, pinned testnet2 value as fallback. */
+/** Resolve UCT's hex coin id - registry first, pinned testnet2 value as fallback. */
 export function uctCoinId(): string {
   return getCoinIdBySymbol(UCT_SYMBOL) ?? UCT_COIN_ID;
 }
@@ -45,7 +45,7 @@ export async function mintUct(amountHuman: string): Promise<void> {
   const result = await sphere.payments.mintFungibleToken(uctCoinId(), amount);
   if (!result.success) {
     throw new Error(
-      `Minting failed: ${result.error}. This usually means the gateway API key is missing or the testnet2 gateway is unreachable — check VITE_UNICITY_API_KEY (.env.example has the public testnet2 key).`,
+      `Minting failed: ${result.error}. This usually means the gateway API key is missing or the testnet2 gateway is unreachable - check VITE_UNICITY_API_KEY (.env.example has the public testnet2 key).`,
     );
   }
 }
@@ -89,7 +89,7 @@ export async function registerNametag(raw: string): Promise<string> {
     const msg = err instanceof Error ? err.message : String(err);
     if (/taken|already/i.test(msg)) {
       throw new Error(
-        `@${name} is already registered to a different wallet. Nametags are first-seen-wins and bound to a public key — pick another name.`,
+        `@${name} is already registered to a different wallet. Nametags are first-seen-wins and bound to a public key - pick another name.`,
       );
     }
     throw err;

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, RouterProvider, useLocation } from 'react-router-dom';
 import { WalletWidget } from './components/WalletWidget';
+import { Icon } from './components/Icon';
 import { router } from './router';
 
 export function Shell({ children }: { children: ReactNode }) {
@@ -19,7 +20,10 @@ export function Shell({ children }: { children: ReactNode }) {
       >
         <nav className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="press flex items-center gap-2 font-display text-xl font-bold">
-            <span aria-hidden>🥂</span> Cheers
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-600 to-violet-600 text-white shadow-sm">
+              <Icon name="cheers" className="h-5 w-5" />
+            </span>
+            Cheers
           </Link>
           <div className="flex items-center gap-2 text-sm">
             {!onCard && (

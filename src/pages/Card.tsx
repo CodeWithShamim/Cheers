@@ -5,6 +5,7 @@ import { SignatureNote } from '../components/SignatureNote';
 import { TotalBanner } from '../components/TotalBanner';
 import { WalletGate } from '../components/WalletGate';
 import { Button, ErrorNote, SkeletonNote, Spinner, cx } from '../components/ui';
+import { Icon } from '../components/Icon';
 import { toHumanError } from '../lib/errors';
 import { decodeCardToken, InvalidCardLinkError, type CardLinkPayload } from '../link';
 import type { ParsedCard } from '../protocol';
@@ -37,7 +38,9 @@ export default function CardPage() {
 function BadLink({ message }: { message: string }) {
   return (
     <div className="mx-auto max-w-md px-4 py-20 text-center">
-      <div className="text-5xl">💔</div>
+      <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-100 text-rose-500 dark:bg-rose-500/15 dark:text-rose-300">
+        <Icon name="heartBroken" className="h-8 w-8" />
+      </span>
       <h1 className="font-display mt-4 text-2xl font-bold">Can't open this card</h1>
       <p className="mt-2 text-stone-600 dark:text-stone-400">{message}</p>
       <div className="mt-6">
@@ -168,9 +171,9 @@ function CardView({ payload }: { payload: CardLinkPayload }) {
       <div className="mx-auto max-w-3xl px-4 pt-6">
         {/* Header */}
         <header className={cx('rounded-3xl px-6 py-10 text-center sm:py-14', theme.header)}>
-          <div className="text-5xl" aria-hidden>
-            {occasion.emoji}
-          </div>
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur">
+            <Icon name={occasion.icon} className="h-9 w-9" />
+          </span>
           <h1 className={cx('mt-3 text-3xl font-bold sm:text-4xl', theme.title)}>{meta.title}</h1>
           <p className={cx('mt-2 text-lg', theme.subtitle)}>
             for {meta.recipientDisplay} ({meta.recipient})
@@ -210,8 +213,8 @@ function CardView({ payload }: { payload: CardLinkPayload }) {
         {/* Thanks pinned at top of wall */}
         {card.thanks && (
           <div className={cx('mt-6 animate-pop-in rounded-2xl border-2 border-amber-400/70 p-5 text-center', theme.note)}>
-            <div className="text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
-              💌 {meta.recipientDisplay} says
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
+              <Icon name="mail" className="h-4 w-4" /> {meta.recipientDisplay} says
             </div>
             <p className="mt-2 whitespace-pre-wrap font-display text-lg">{card.thanks.note}</p>
           </div>
@@ -222,9 +225,9 @@ function CardView({ payload }: { payload: CardLinkPayload }) {
           <div className="sticky bottom-6 z-30 mt-8 flex justify-center">
             <button
               onClick={() => setSigning(true)}
-              className={cx('press rounded-2xl px-8 py-4 text-lg font-bold', theme.button)}
+              className={cx('press inline-flex items-center gap-2 rounded-2xl px-8 py-4 text-lg font-bold', theme.button)}
             >
-              ✍️ Sign this card
+              <Icon name="pen" className="h-5 w-5" /> Sign this card
             </button>
           </div>
         )}
@@ -249,10 +252,12 @@ function CardView({ payload }: { payload: CardLinkPayload }) {
         <section aria-label="Signatures" className="mt-8">
           {card.signatures.length === 0 ? (
             <div className={cx('rounded-2xl p-10 text-center', theme.banner)}>
-              <div className="text-4xl">🕊️</div>
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-black/5 dark:bg-white/10">
+                <Icon name="pen" className="h-7 w-7 opacity-70" />
+              </span>
               <h2 className="font-display mt-3 text-xl font-semibold">No signatures yet</h2>
               <p className="mt-2 text-sm opacity-70">
-                Be the first to sign — or share the link so friends can pile in.
+                Be the first to sign, or share the link so friends can pile in.
               </p>
             </div>
           ) : (
@@ -293,7 +298,9 @@ function RecipientPanel({
 }) {
   return (
     <div className={cx('mt-6 rounded-2xl p-5', theme)}>
-      <h2 className="font-display text-lg font-semibold">🥂 This card is for you!</h2>
+      <h2 className="font-display flex items-center gap-2 text-lg font-semibold">
+        <Icon name="gift" className="h-5 w-5 text-fuchsia-500" /> This card is for you!
+      </h2>
       <p className="mt-1 text-sm opacity-70">
         Every gift above was sent straight to your wallet. {thanks ? 'Update your thank-you note:' : 'Say thanks to everyone:'}
       </p>

@@ -18,7 +18,7 @@ declare module '@unicitylabs/sphere-sdk/impl/browser' {
   } from '@unicitylabs/sphere-sdk';
 
   export interface BrowserProvidersConfig {
-    /** Required — selects gateway/relay presets. 'testnet' == testnet2. */
+    /** Required - selects gateway/relay presets. 'testnet' == testnet2. */
     network: NetworkType;
     storage?: { prefix?: string };
     transport?: {

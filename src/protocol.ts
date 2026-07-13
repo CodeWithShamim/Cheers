@@ -2,7 +2,7 @@
  * Cheers on-network protocol.
  *
  * A card is a private NIP-29 group; every piece of card state is a JSON
- * message inside that group. This module is PURE — no SDK imports, no I/O —
+ * message inside that group. This module is PURE - no SDK imports, no I/O -
  * so it is fully unit-testable. It parses raw group messages defensively:
  * anything that isn't valid JSON of a known versioned type is ignored,
  * never a crash.
@@ -37,7 +37,7 @@ export const cardSignSchema = z.object({
   note: z.string().max(280),
   amount: amountString,
   coinId: z.string().min(1),
-  /** On-network transfer id from payments.send — proof of the chip-in. Absent for amount "0". */
+  /** On-network transfer id from payments.send - proof of the chip-in. Absent for amount "0". */
   transferId: z.string().min(1).optional(),
   emoji: z.string().max(8).optional(),
   signedAt: z.number().int().positive(),
@@ -53,7 +53,7 @@ export const cardThanksSchema = z.object({
 export type CardThanks = z.infer<typeof cardThanksSchema>;
 
 /**
- * Minimal shape of a group message — structurally compatible with the SDK's
+ * Minimal shape of a group message - structurally compatible with the SDK's
  * GroupMessageData, but declared here so this module stays SDK-free.
  */
 export interface RawGroupMessage {
@@ -68,7 +68,7 @@ export interface ParsedSignature extends CardSign {
   messageId: string;
   senderPubkey: string;
   timestamp: number;
-  /** True when the chip-in carries a transferId (or amount is 0 — nothing to verify). */
+  /** True when the chip-in carries a transferId (or amount is 0 - nothing to verify). */
   verified: boolean;
 }
 
@@ -120,7 +120,7 @@ export function parseProtocolMessage(
 export interface ParseCardOptions {
   /**
    * Pubkeys that verify a `card.thanks` as coming from the recipient
-   * (e.g. resolved transport pubkey, chain pubkey — any normalized form).
+   * (e.g. resolved transport pubkey, chain pubkey - any normalized form).
    * Thanks from anyone else are ignored: without this, any group member
    * could impersonate the recipient.
    */
@@ -208,7 +208,7 @@ export function parseCard(
   return { meta, signatures, thanks, total, unverifiedTotal, signerCount: signatures.length };
 }
 
-/** Serialize helpers — the single place message payloads are produced. */
+/** Serialize helpers - the single place message payloads are produced. */
 export function buildCardMeta(meta: Omit<CardMeta, 'v' | 'type'>): string {
   return JSON.stringify(cardMetaSchema.parse({ v: 1, type: 'card.meta', ...meta }));
 }

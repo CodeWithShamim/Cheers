@@ -1,5 +1,5 @@
 /**
- * Pure UCT display formatting — deliberately SDK-free so the app shell
+ * Pure UCT display formatting - deliberately SDK-free so the app shell
  * (header wallet widget) doesn't pull the whole SDK into the landing-page
  * bundle. Equivalence with the SDK's toHumanReadable is asserted in tests.
  */
