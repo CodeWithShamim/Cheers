@@ -15,6 +15,7 @@ import type { Sphere, SphereInitResult } from '@unicitylabs/sphere-sdk';
 const WALLET_API_URL = 'https://wallet-api.unicity.network';
 const DEVICE_ID_KEY = 'cheers_device_id';
 const SDK_STORAGE_PREFIX = 'sphere_'; // mirrors the SDK's STORAGE_PREFIX constant
+const CHEERS_STORAGE_PREFIX = 'cheers_'; // all app-local wallet state (device id, backup flag, pending posts, my-cards)
 
 function getApiKey(): string {
   const key = import.meta.env.VITE_UNICITY_API_KEY as string | undefined;
@@ -102,6 +103,31 @@ export async function restoreFromMnemonic(mnemonic: string): Promise<SphereInitR
   } catch (err) {
     initPromise = null; // don't cache a failed restore
     throw err;
+  }
+}
+
+/**
+ * Sign out: tear down the current wallet and erase ALL local state for it.
+ *
+ * The wallet's keys live only in this browser, so this is irreversible unless
+ * the user has saved their recovery phrase - callers must warn first. Wipes
+ * both the SDK's `sphere_*` keys AND every `cheers_*` key (device id, backup
+ * flag, pending posts, my-cards) so the next load starts a brand-new wallet.
+ */
+export async function logoutWallet(): Promise<void> {
+  if (initPromise) {
+    try {
+      const { sphere } = await initPromise;
+      await sphere.destroy();
+    } catch {
+      // best-effort teardown; the storage wipe below is authoritative
+    }
+    initPromise = null;
+  }
+  for (const key of Object.keys(localStorage)) {
+    if (key.startsWith(SDK_STORAGE_PREFIX) || key.startsWith(CHEERS_STORAGE_PREFIX)) {
+      localStorage.removeItem(key);
+    }
   }
 }
 

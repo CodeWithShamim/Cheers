@@ -5,7 +5,7 @@ import { WalletGate } from '../components/WalletGate';
 import { Button, CopyButton, ErrorNote, Field, cx, inputClass } from '../components/ui';
 import { Icon } from '../components/Icon';
 import { toHumanError } from '../lib/errors';
-import { restoreFromMnemonic } from '../sphere/client';
+import { logoutWallet, restoreFromMnemonic } from '../sphere/client';
 import { checkNametag, isMnemonicValid, mintUct, registerNametag } from '../sphere/wallet';
 import { resetBackupConfirmation } from '../lib/backup';
 import { useWallet } from '../store';
@@ -95,7 +95,61 @@ function WalletBody() {
           </Button>
         )}
       </section>
+
+      {/* Sign out */}
+      <LogoutSection />
     </div>
+  );
+}
+
+function LogoutSection() {
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  return (
+    <section className="space-y-4 rounded-2xl border border-red-200 bg-white p-5 dark:border-red-900/50 dark:bg-stone-900">
+      <h2 className="font-display text-lg font-semibold text-red-800 dark:text-red-300">Sign out</h2>
+      {confirming ? (
+        <div className="space-y-4">
+          <ErrorNote>
+            This erases the wallet from this browser - keys, balances, nametag and your card list.
+            It's permanent unless you've saved your recovery phrase above. Anyone restoring that
+            phrase can bring the wallet back; without it, it's gone.
+          </ErrorNote>
+          <div className="flex gap-2">
+            <Button
+              variant="danger"
+              busy={busy}
+              onClick={async () => {
+                setBusy(true);
+                await logoutWallet();
+                // Full reload: WalletGate generates a fresh wallet on the landing route.
+                window.location.href = '/';
+              }}
+            >
+              <Icon name="logout" className="h-4 w-4" /> Erase wallet & sign out
+            </Button>
+            <Button variant="ghost" onClick={() => setConfirming(false)} disabled={busy}>
+              Cancel
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <p className="text-sm text-stone-500 dark:text-stone-400">
+            Remove this wallet from this browser. Save your recovery phrase first - it's the only
+            way to get this wallet back.
+          </p>
+          <Button
+            variant="ghost"
+            className="border border-red-300 text-red-800 hover:bg-red-50 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/40"
+            onClick={() => setConfirming(true)}
+          >
+            <Icon name="logout" className="h-4 w-4" /> Sign out
+          </Button>
+        </>
+      )}
+    </section>
   );
 }
 

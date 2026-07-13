@@ -27,6 +27,7 @@ export type IconName =
   | 'link'
   | 'bolt'
   | 'coin'
+  | 'logout'
   // occasions
   | 'cake'
   | 'suitcase'
@@ -102,6 +103,9 @@ const PATHS: Record<IconName, ReactNode> = {
     <path d="M3.9 12A3.1 3.1 0 0 1 7 8.9h4V7H7a5 5 0 0 0 0 10h4v-1.9H7A3.1 3.1 0 0 1 3.9 12zM8 13h8v-2H8v2zm9-6h-4v1.9h4a3.1 3.1 0 0 1 0 6.2h-4V17h4a5 5 0 0 0 0-10z" />
   ),
   bolt: <path d="M13 2 3 14h7l-1 8 10-12h-7z" />,
+  logout: (
+    <path d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5v-2H5V5h5V3zm7.6 8-3.3-3.3 1.4-1.4L21.4 12l-5.7 5.7-1.4-1.4L17.6 13H9v-2h8.6z" />
+  ),
   coin: (
     <>
       <circle cx="12" cy="12" r="9" />

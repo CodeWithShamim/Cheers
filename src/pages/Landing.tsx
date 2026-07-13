@@ -3,16 +3,43 @@ import { Icon } from '../components/Icon';
 import { cx } from '../components/ui';
 
 const demoNotes = [
-  { name: 'Rafi', tint: 'from-fuchsia-500 to-pink-500', note: "Best boss ever. Don't go!", amount: '10' },
-  { name: 'Priya', tint: 'from-violet-500 to-indigo-500', note: 'The kitchen will be quieter without your laugh.', amount: '5' },
+  {
+    name: 'Rafi',
+    tint: 'from-fuchsia-500 to-pink-500',
+    note: "Best boss ever. Don't go!",
+    amount: '10',
+  },
+  {
+    name: 'Priya',
+    tint: 'from-violet-500 to-indigo-500',
+    note: 'The kitchen will be quieter without your laugh.',
+    amount: '5',
+  },
   { name: 'Tom', tint: 'from-cyan-500 to-sky-500', note: 'To the next adventure!', amount: null },
-  { name: 'Ana', tint: 'from-amber-500 to-orange-500', note: 'You taught me everything. Thank you.', amount: '25' },
+  {
+    name: 'Ana',
+    tint: 'from-amber-500 to-orange-500',
+    note: 'You taught me everything. Thank you.',
+    amount: '25',
+  },
 ];
 
 const steps = [
-  { icon: 'mail', title: '1. Start a card', body: "Pick who it's for, the occasion, and a look. You get one link to share." },
-  { icon: 'pen', title: '2. Friends sign it', body: 'Each friend writes a note and chips in test tokens, sent wallet-to-wallet, straight to the recipient.' },
-  { icon: 'gift', title: '3. They open it', body: 'The recipient gets a DM with the link: every note, plus everything friends gave, already in their wallet.' },
+  {
+    icon: 'mail',
+    title: '1. Start a card',
+    body: "Pick who it's for, the occasion, and a look. You get one link to share.",
+  },
+  {
+    icon: 'pen',
+    title: '2. Friends sign it',
+    body: 'Each friend writes a note and chips in test tokens, sent wallet-to-wallet, straight to the recipient.',
+  },
+  {
+    icon: 'gift',
+    title: '3. They open it',
+    body: 'The recipient gets a DM with the link: every note, plus everything friends gave, already in their wallet.',
+  },
 ] as const;
 
 export default function Landing() {
@@ -31,10 +58,10 @@ export default function Landing() {
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:py-24 lg:grid-cols-2 lg:gap-8">
           {/* Left: the pitch */}
           <div className="max-w-xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-fuchsia-300/60 bg-white/70 px-3.5 py-1.5 text-sm font-semibold text-fuchsia-700 shadow-sm backdrop-blur dark:border-fuchsia-500/30 dark:bg-white/5 dark:text-fuchsia-300">
+            {/* <span className="inline-flex items-center gap-2 rounded-full border border-fuchsia-300/60 bg-white/70 px-3.5 py-1.5 text-sm font-semibold text-fuchsia-700 shadow-sm backdrop-blur dark:border-fuchsia-500/30 dark:bg-white/5 dark:text-fuchsia-300">
               <Icon name="shield" className="h-4 w-4" />
               No server. Wallet-to-wallet. On-chain.
-            </span>
+            </span> */}
 
             <h1 className="font-display mt-5 text-4xl font-bold leading-[1.05] sm:text-6xl">
               The group card where everyone{' '}
@@ -92,7 +119,9 @@ export default function Landing() {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white">
                 <Icon name="check" className="h-4 w-4" />
               </span>
-              <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">+10 UCT sent</span>
+              <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                +10 UCT sent
+              </span>
             </div>
             <div className="absolute -right-3 top-1/3 z-20 hidden animate-float items-center gap-2 rounded-2xl border border-white/60 bg-white/80 px-4 py-2.5 shadow-xl backdrop-blur [animation-delay:-2.5s] sm:flex dark:border-white/10 dark:bg-stone-900/80">
               <Icon name="coin" className="h-7 w-7 text-amber-500" />
@@ -115,8 +144,7 @@ export default function Landing() {
                 </div>
 
                 <div className="mx-auto mt-4 flex w-fit items-center gap-2 rounded-2xl bg-stone-100 px-4 py-2 text-sm font-bold dark:bg-stone-800">
-                  <Icon name="users" className="h-4 w-4 text-violet-500" />
-                  4 friends signed
+                  <Icon name="users" className="h-4 w-4 text-violet-500" />4 friends signed
                   <span className="text-stone-400">·</span>
                   <Icon name="coin" className="h-4 w-4 text-amber-500" />
                   40 UCT
@@ -146,7 +174,9 @@ export default function Landing() {
                             </span>
                           )}
                         </div>
-                        <p className="truncate text-xs text-stone-500 dark:text-stone-400">{n.note}</p>
+                        <p className="truncate text-xs text-stone-500 dark:text-stone-400">
+                          {n.note}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -179,20 +209,27 @@ export default function Landing() {
       {/* ── Architecture statement ───────────────────────────────────── */}
       <section className="border-y border-stone-200 bg-white px-4 py-14 dark:border-stone-800 dark:bg-stone-900">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="font-display text-3xl font-bold">This app has no server.</h2>
+          <h2 className="font-display text-3xl font-bold">Cheers gules.</h2>
           <p className="mt-4 text-lg text-stone-600 dark:text-stone-300">
             Every card is a private group on the <strong>Unicity network</strong>: the network
-            itself is the database. Your wallet is created in your browser and never leaves it.
-            And when a friend chips in, tokens move <strong>directly from their wallet to the
-            recipient's wallet</strong>, peer-to-peer. No pool, no custodian, no middleman, not
-            even us. Anyone can verify every gift by its on-network transfer id.
+            itself is the database. Your wallet is created in your browser and never leaves it. And
+            when a friend chips in, tokens move{' '}
+            <strong>directly from their wallet to the recipient's wallet</strong>, peer-to-peer. No
+            pool, no custodian, no middleman, not even us. Anyone can verify every gift by its
+            on-network transfer id.
           </p>
           <div className="mx-auto mt-6 flex w-fit flex-wrap items-center justify-center gap-3 rounded-xl bg-stone-100 px-4 py-3 text-xs font-semibold text-stone-600 dark:bg-stone-800 dark:text-stone-300">
-            <span className="inline-flex items-center gap-1.5"><Icon name="wallet" className="h-4 w-4" /> browser wallet</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Icon name="wallet" className="h-4 w-4" /> browser wallet
+            </span>
             <Icon name="link" className="h-4 w-4 text-stone-400" />
-            <span className="inline-flex items-center gap-1.5"><Icon name="mail" className="h-4 w-4" /> Nostr relay</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Icon name="mail" className="h-4 w-4" /> Nostr relay
+            </span>
             <Icon name="link" className="h-4 w-4 text-stone-400" />
-            <span className="inline-flex items-center gap-1.5"><Icon name="coin" className="h-4 w-4" /> testnet2 gateway</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Icon name="coin" className="h-4 w-4" /> testnet2 gateway
+            </span>
           </div>
         </div>
       </section>
@@ -201,12 +238,22 @@ export default function Landing() {
       <footer className="mx-auto max-w-4xl px-4 py-10 text-center text-sm text-stone-500 dark:text-stone-400">
         <p>
           Built on{' '}
-          <a className="underline" href="https://developers.unicity.network/docs" target="_blank" rel="noreferrer">
+          <a
+            className="underline"
+            href="https://developers.unicity.network/docs"
+            target="_blank"
+            rel="noreferrer"
+          >
             Unicity Sphere
           </a>{' '}
           (testnet2)
           {' · '}
-          <a className="underline" href="https://github.com/unicity-sphere/sphere-sdk" target="_blank" rel="noreferrer">
+          <a
+            className="underline"
+            href="https://github.com/unicity-sphere/sphere-sdk"
+            target="_blank"
+            rel="noreferrer"
+          >
             Sphere SDK
           </a>
           {' · '}
