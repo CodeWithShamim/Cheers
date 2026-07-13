@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm paper — never default-Tailwind-gray */
+    --ink: 28 25 23; /* stone-900 */
+    --paper: 250 248 244;
+    --accent: 190 62 40; /* toasted terracotta */
+  }
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply font-body bg-[#faf8f4] text-stone-900 dark:bg-[#171412] dark:text-stone-100;
+  }
+  ::selection {
+    background: rgb(190 62 40 / 0.22);
+  }
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf8f4] dark:focus-visible:ring-offset-[#171412];
+  }
+}
+
+@layer utilities {
+  .press {
+    @apply transition-transform duration-100 active:scale-[0.97];
+  }
+  .skeleton {
+    @apply animate-shimmer rounded-lg bg-stone-200/80 dark:bg-stone-800/80;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgb(255 255 255 / 0.35),
+      transparent
+    );
+    background-size: 400px 100%;
+    background-repeat: no-repeat;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
