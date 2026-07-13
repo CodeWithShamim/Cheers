@@ -7,13 +7,8 @@ peer-to-peer**. The card fills up live; Sara opens a single page with every mess
 total of what friends gave her, confetti, and a "say thanks" box that posts back to everyone.
 
 It runs on the **Unicity testnet2** network and is built for the Unicity Sphere builder
-campaign (Social & messaging track).
 
-## The thesis: no server, anywhere
-
-This app is a static bundle of HTML/JS. There is no backend, no database, no API of ours:
-
-- **The network is the database.** Every card *is* a private NIP-29 group chat on the Unicity
+- **The network is the database.** Every card _is_ a private NIP-29 group chat on the Unicity
   relay. The card's metadata is the first message in the group; every signature is a signed
   JSON message; the recipient's thank-you is a message. Rendering a card = join the group,
   fetch its messages, parse, draw.
@@ -23,7 +18,7 @@ This app is a static bundle of HTML/JS. There is no backend, no database, no API
   (A pooled/custodial mode is deliberately out of scope.)
 - **Keys never leave the browser.** Wallets are generated client-side and persisted in
   localStorage; the first run forces a mnemonic backup.
-- **The share link is the only credential**, and it rides the URL *hash fragment* — a static
+- **The share link is the only credential**, and it rides the URL _hash fragment_ — a static
   host never sees it, because fragments aren't sent in HTTP requests.
 
 ```
@@ -102,7 +97,7 @@ Chipping in is two independent network actions: (1) `payments.send` → transfer
 atomic across two networks — so Cheers is honest about it instead:
 
 - If the **post fails after the payment succeeded**, the fully-built signature is persisted
-  locally and **re-posted** on the next app load. The payment is *never* retried — the stored
+  locally and **re-posted** on the next app load. The payment is _never_ retried — the stored
   transferId proves it already happened.
 - If the payment result is **indeterminate** (`CERTIFICATION_UNCONFIRMED`), the app never
   re-sends (that's how you double-pay); the SDK resumes the open intent under the same
@@ -112,27 +107,14 @@ atomic across two networks — so Cheers is honest about it instead:
 
 ## Troubleshooting
 
-| Symptom | Cause / fix |
-|---|---|
-| "This nametag doesn't exist on the network yet" | The recipient hasn't registered a Unicity ID. They register in **Wallet → Register a nametag** (or any Sphere wallet); it must resolve before a card can be created for it. |
-| "@name is already taken" | Nametags are first-seen-wins and bound to a wallet's public key. Pick another. If it's *your* name failing on a wallet you restored: check the wallet actually loaded (Wallet page shows the address) — a fresh keypair can't re-register the old name. |
-| Mint fails | The gateway needs the API key: `.env` → `VITE_UNICITY_API_KEY` (the testnet2 key in `.env.example` is public). Also happens when the testnet2 gateway is down — retry later. |
-| "Reconnecting to the relay…" banner | The NIP-29 relay dropped; the SDK auto-reconnects with backoff. New signatures resume flowing when it does. |
-| Card opens but is empty / "metadata missing" | Relay hasn't served the group history yet — reopen in a moment. If it persists, the link's invite may have been revoked. |
-| **Cleared browser data = lost wallet** | The wallet lives only in localStorage. Without the saved mnemonic, tokens in it are unrecoverable — that's the custody model working as designed. Restore any wallet from its phrase in **Wallet → Restore**. |
-
-## Deploy (static)
-
-Any static host works — there is nothing else to deploy.
-
-**Vercel**: import the repo, framework = Vite, set env var `VITE_UNICITY_API_KEY`. The
-included `vercel.json` rewrites all routes to `index.html` (SPA).
-
-**Netlify**: build command `npm run build`, publish dir `dist`, same env var. The included
-`netlify.toml` has the SPA redirect.
-
-After deploying, run `APP_ORIGIN=https://your-app.vercel.app npm run seed` to mint a fresh
-demo card whose link points at the live site.
+| Symptom                                         | Cause / fix                                                                                                                                                                                                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| "This nametag doesn't exist on the network yet" | The recipient hasn't registered a Unicity ID. They register in **Wallet → Register a nametag** (or any Sphere wallet); it must resolve before a card can be created for it.                                                                             |
+| "@name is already taken"                        | Nametags are first-seen-wins and bound to a wallet's public key. Pick another. If it's _your_ name failing on a wallet you restored: check the wallet actually loaded (Wallet page shows the address) — a fresh keypair can't re-register the old name. |
+| Mint fails                                      | The gateway needs the API key: `.env` → `VITE_UNICITY_API_KEY` (the testnet2 key in `.env.example` is public). Also happens when the testnet2 gateway is down — retry later.                                                                            |
+| "Reconnecting to the relay…" banner             | The NIP-29 relay dropped; the SDK auto-reconnects with backoff. New signatures resume flowing when it does.                                                                                                                                             |
+| Card opens but is empty / "metadata missing"    | Relay hasn't served the group history yet — reopen in a moment. If it persists, the link's invite may have been revoked.                                                                                                                                |
+| **Cleared browser data = lost wallet**          | The wallet lives only in localStorage. Without the saved mnemonic, tokens in it are unrecoverable — that's the custody model working as designed. Restore any wallet from its phrase in **Wallet → Restore**.                                           |
 
 ## Project layout
 
@@ -154,4 +136,3 @@ tests/               # vitest suites for every pure module
 
 See `NOTES.md` for every place the real SDK differed from its docs and how the app adapted.
 Testnet only: UCT is self-minted test money with no real value.
-# Cheers
