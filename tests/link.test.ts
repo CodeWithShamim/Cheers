@@ -46,9 +46,19 @@ describe('card link codec', () => {
     expect(() => decodeCardToken('aGVsbG8')).toThrow(InvalidCardLinkError); // "hello"
   });
 
-  it('throws on structurally wrong payloads (missing invite, wrong version)', () => {
+  it('decodes an invite-less payload (device-local links rebuilt from the network)', () => {
     const noInvite = btoa(JSON.stringify({ v: 1, groupId: 'g' }));
-    expect(() => decodeCardToken(noInvite)).toThrow(InvalidCardLinkError);
+    expect(decodeCardToken(noInvite)).toEqual({ v: 1, groupId: 'g' });
+  });
+
+  it('round-trips an invite-less payload through buildCardUrl', () => {
+    const url = buildCardUrl('https://cheers.example.com', { groupId: 'g' });
+    expect(decodeCardToken(extractCardToken(url)!)).toEqual({ v: 1, groupId: 'g' });
+  });
+
+  it('throws on structurally wrong payloads (no groupId, wrong version)', () => {
+    const noGroup = btoa(JSON.stringify({ v: 1, invite: 'i' }));
+    expect(() => decodeCardToken(noGroup)).toThrow(InvalidCardLinkError);
     const wrongVersion = btoa(JSON.stringify({ v: 2, groupId: 'g', invite: 'i' }));
     expect(() => decodeCardToken(wrongVersion)).toThrow(InvalidCardLinkError);
   });

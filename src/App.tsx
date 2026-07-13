@@ -8,7 +8,8 @@ import { router } from './router';
 export function Shell({ children }: { children: ReactNode }) {
   const location = useLocation();
   // The card page paints its own full-bleed themed background.
-  const onCard = location.pathname.startsWith('/c');
+  // Match only /c and /c/* — not /create, which also starts with "/c".
+  const onCard = location.pathname === '/c' || location.pathname.startsWith('/c/');
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Close the mobile menu whenever we navigate to a new page.

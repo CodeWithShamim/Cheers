@@ -11,6 +11,7 @@ import {
   buildCardSign,
   buildCardThanks,
   parseCard,
+  pubkeysEqual,
   type CardMeta,
   type Occasion,
   type ParsedCard,
@@ -19,7 +20,7 @@ import { buildCardUrl, InvalidCardLinkError, type CardLinkPayload } from '../lin
 import { UCT_SYMBOL } from '../lib/amounts';
 import { isPaymentIndeterminate } from '../lib/errors';
 import { PendingSignatureStore } from '../lib/pending';
-import { rememberCard } from '../lib/mycards';
+import { rememberCard, type CardRole } from '../lib/mycards';
 import { getSphere } from './client';
 import { resolvePeer, uctCoinId } from './wallet';
 
@@ -148,6 +149,18 @@ function toRawMessages(messages: GroupMessageData[]) {
   }));
 }
 
+/** Fetch a group's messages and merge them with the module cache, deduped by id. */
+async function loadGroupMessages(
+  gc: GroupChatModule,
+  groupId: string,
+): Promise<GroupMessageData[]> {
+  const fetched = await gc.fetchMessages(groupId, 0, 500);
+  const cached = gc.getMessages(groupId);
+  const byId = new Map<string, GroupMessageData>();
+  for (const m of [...cached, ...fetched]) byId.set(m.id ?? `${m.senderPubkey}:${m.timestamp}`, m);
+  return [...byId.values()];
+}
+
 /** Pubkeys that count as "the recipient" for thanks-verification. */
 function recipientKeys(peer: PeerInfo | null): string[] {
   if (!peer) return [];
@@ -165,12 +178,7 @@ export async function openCard(payload: CardLinkPayload): Promise<OpenedCard> {
     );
   }
 
-  const fetched = await gc.fetchMessages(payload.groupId, 0, 500);
-  const cached = gc.getMessages(payload.groupId);
-  // Merge fetch + cache, dedupe by id.
-  const byId = new Map<string, GroupMessageData>();
-  for (const m of [...cached, ...fetched]) byId.set(m.id ?? `${m.senderPubkey}:${m.timestamp}`, m);
-  const messages = [...byId.values()];
+  const messages = await loadGroupMessages(gc, payload.groupId);
 
   // First parse without recipient verification just to learn who the card is for.
   const draft = parseCard(toRawMessages(messages));
@@ -208,6 +216,65 @@ export async function openCard(payload: CardLinkPayload): Promise<OpenedCard> {
     isRecipient,
     myPubkey: gc.getMyPublicKey(),
   };
+}
+
+/**
+ * Classify this wallet's relationship to a card from its meta and our identity
+ * - no network round-trip. Falls back to 'signed' (the weakest role) when we
+ * are neither the creator nor the named recipient.
+ */
+function roleForMeta(
+  meta: CardMeta,
+  myChainPubkey: string | null,
+  myNametag: string | null,
+): CardRole {
+  if (myChainPubkey && pubkeysEqual(meta.createdBy, myChainPubkey)) return 'created';
+  if (myNametag && meta.recipient.toLowerCase() === `@${myNametag.toLowerCase()}`) return 'received';
+  return 'signed';
+}
+
+/**
+ * Rebuild the device-local My Cards index from the wallet's on-network group
+ * memberships. Runs once after the wallet is ready so cards reappear after a
+ * logout + restore: the local list is wiped on logout, but the groups (each
+ * card IS a `cheers:`-named private group) are recovered from the network by
+ * the SDK. For each such group we fold its messages into card meta, classify
+ * our role from identity, and re-remember it.
+ *
+ * The rebuilt link carries no invite code - openCard's joinGroup succeeds
+ * without one for a group we are already a member of. Best-effort: a group we
+ * cannot read is skipped rather than failing the whole rebuild.
+ *
+ * Returns the number of cards restored.
+ */
+export async function rebuildMyCardsFromNetwork(): Promise<number> {
+  const sphere = await getSphere();
+  const gc = await getGroupChat();
+  const myChainPubkey = sphere.identity?.chainPubkey ?? null;
+  const myNametag = sphere.identity?.nametag ?? null;
+
+  const groups = gc.getGroups().filter((g) => g.name.startsWith('cheers:'));
+  let restored = 0;
+  for (const group of groups) {
+    try {
+      const card = parseCard(toRawMessages(await loadGroupMessages(gc, group.id)));
+      if (!card.meta) continue;
+      const meta = card.meta;
+      rememberCard({
+        link: buildCardUrl(window.location.origin, { groupId: group.id }),
+        groupId: group.id,
+        role: roleForMeta(meta, myChainPubkey, myNametag),
+        title: meta.title,
+        occasion: meta.occasion,
+        recipientDisplay: meta.recipientDisplay,
+        theme: meta.theme,
+      });
+      restored++;
+    } catch {
+      // Skip a group we can't read; the rest of the rebuild still proceeds.
+    }
+  }
+  return restored;
 }
 
 /**
@@ -312,7 +379,7 @@ export async function signCard(input: SignCardInput): Promise<SignCardResult> {
     // Money (if any) already moved - queue the post, never the payment.
     pendingStore.add({
       groupId: payload.groupId,
-      invite: payload.invite,
+      ...(payload.invite ? { invite: payload.invite } : {}),
       content,
       ...(transferId ? { transferId } : {}),
     });

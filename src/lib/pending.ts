@@ -13,8 +13,12 @@
 export interface PendingSignature {
   /** Card group to post into. */
   groupId: string;
-  /** Invite code, in case the group needs re-joining before posting. */
-  invite: string;
+  /**
+   * Invite code, in case the group needs re-joining before posting. Absent
+   * when the source link carried none (the wallet is already a member, so
+   * re-joining needs no code).
+   */
+  invite?: string;
   /** The exact card.sign JSON string that failed to post. */
   content: string;
   /** TransferId of the already-completed payment (never re-pay). */

@@ -13,8 +13,13 @@ export const cardLinkPayloadSchema = z.object({
   v: z.literal(1),
   /** NIP-29 group id. */
   groupId: z.string().min(1),
-  /** Invite code for the private group. */
-  invite: z.string().min(1),
+  /**
+   * Invite code for the private group. Present on shareable links so a
+   * newcomer can join. Omitted on device-local links rebuilt from the network
+   * (see rebuildMyCardsFromNetwork): the wallet is already a member, so joining
+   * needs no code.
+   */
+  invite: z.string().min(1).optional(),
   /** Optional relay override (ws:// or wss:// URL). */
   relay: z.string().url().optional(),
 });

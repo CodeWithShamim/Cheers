@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, cx } from '../components/ui';
+import { WalletGate } from '../components/WalletGate';
+import { Button, Spinner, cx } from '../components/ui';
 import { Icon } from '../components/Icon';
 import { FeatureRow, GlowCard, GradientHeading, Pill, SplitPage } from '../components/Web3Layout';
 import { forgetCard, listMyCards, type CardRole } from '../lib/mycards';
+import { rebuildMyCardsFromNetwork } from '../sphere/cards';
 import { OCCASION_META, getTheme } from '../themes';
 
 const ROLE_LABEL: Record<CardRole, string> = {
@@ -46,9 +48,44 @@ function MyCardsAside({ count }: { count: number }) {
 }
 
 export default function MyCards() {
+  return (
+    <WalletGate>
+      <MyCardsList />
+    </WalletGate>
+  );
+}
+
+function MyCardsList() {
   const [cards, setCards] = useState(listMyCards);
+  // Refresh from the wallet's on-network groups each visit, so cards restored
+  // after a logout + login (the local list is wiped on logout) reappear here.
+  const [rebuilding, setRebuilding] = useState(() => listMyCards().length === 0);
+
+  useEffect(() => {
+    let cancelled = false;
+    void rebuildMyCardsFromNetwork()
+      .catch(() => {})
+      .finally(() => {
+        if (cancelled) return;
+        setCards(listMyCards());
+        setRebuilding(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   if (cards.length === 0) {
+    if (rebuilding) {
+      return (
+        <SplitPage aside={<MyCardsAside count={0} />}>
+          <GlowCard glow="cyan" className="flex flex-col items-center px-6 py-14 text-center">
+            <Spinner className="h-8 w-8 text-fuchsia-500" />
+            <p className="mt-4 text-stone-600 dark:text-stone-400">Looking for your cards on the network…</p>
+          </GlowCard>
+        </SplitPage>
+      );
+    }
     return (
       <SplitPage aside={<MyCardsAside count={0} />}>
         <GlowCard glow="cyan" className="flex flex-col items-center px-6 py-14 text-center">

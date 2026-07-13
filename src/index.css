@@ -11,6 +11,9 @@
   }
   html {
     @apply antialiased;
+    /* Always reserve the scrollbar gutter so centered content doesn't shift
+       sideways when navigating between scrolling and non-scrolling pages. */
+    scrollbar-gutter: stable;
   }
   body {
     @apply font-body bg-[#faf8f4] text-stone-900 dark:bg-[#171412] dark:text-stone-100;
