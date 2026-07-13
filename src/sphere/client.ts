@@ -16,6 +16,26 @@ const WALLET_API_URL = 'https://wallet-api.unicity.network';
 const DEVICE_ID_KEY = 'cheers_device_id';
 const SDK_STORAGE_PREFIX = 'sphere_'; // mirrors the SDK's STORAGE_PREFIX constant
 const CHEERS_STORAGE_PREFIX = 'cheers_'; // all app-local wallet state (device id, backup flag, pending posts, my-cards)
+const SDK_IDB_NAME = 'sphere-storage'; // the SDK persists the wallet (keys, tokens) in this IndexedDB database
+
+/**
+ * Delete the SDK's IndexedDB store. The wallet itself lives here (NOT in
+ * localStorage), so wiping it is what actually erases the wallet on sign-out /
+ * before a restore. Best-effort: resolves even if blocked (the caller reloads
+ * right after, which tears down any lingering connection).
+ */
+function deleteSdkDatabase(): Promise<void> {
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.deleteDatabase(SDK_IDB_NAME);
+      req.onsuccess = () => resolve();
+      req.onerror = () => resolve();
+      req.onblocked = () => resolve();
+    } catch {
+      resolve();
+    }
+  });
+}
 
 function getApiKey(): string {
   const key = import.meta.env.VITE_UNICITY_API_KEY as string | undefined;
@@ -129,9 +149,27 @@ export async function logoutWallet(): Promise<void> {
       localStorage.removeItem(key);
     }
   }
+  await deleteSdkDatabase();
 }
 
 /** Whether the SDK has ever been initialized in this session. */
 export function isSphereStarted(): boolean {
   return initPromise !== null;
+}
+
+/**
+ * Whether this browser has already been through wallet setup.
+ *
+ * The onboarding gate uses this to tell a RETURNING visitor (load their wallet
+ * silently) from a BRAND-NEW one (let them choose create vs restore before we
+ * ever generate keys). The SDK keeps the wallet itself in IndexedDB - which we
+ * can't read synchronously here - and namespaces that storage by `deviceId`.
+ * `cheers_device_id` is written on the first SDK init and wiped on logout, so
+ * its presence is a reliable synchronous proxy: it exists exactly when a wallet
+ * was set up on this device and hasn't been signed out. A rare miss is safe -
+ * init() then loads the existing wallet rather than replacing it, since the SDK
+ * only auto-generates when no wallet exists for the current deviceId.
+ */
+export function hasStoredWallet(): boolean {
+  return localStorage.getItem(DEVICE_ID_KEY) !== null;
 }

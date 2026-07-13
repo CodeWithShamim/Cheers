@@ -234,6 +234,98 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── For every moment ─────────────────────────────────────────── */}
+      <section className="mx-auto max-w-5xl px-4 py-16">
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-fuchsia-300/60 bg-white/70 px-3.5 py-1.5 text-sm font-semibold text-fuchsia-700 shadow-sm backdrop-blur dark:border-fuchsia-500/30 dark:bg-white/5 dark:text-fuchsia-300">
+            <Icon name="sparkles" className="h-4 w-4" />
+            For every moment
+          </span>
+          <h2 className="font-display mt-4 text-3xl font-bold">
+            One card, endless{' '}
+            <span className="bg-gradient-to-r from-fuchsia-600 via-violet-600 to-cyan-500 bg-clip-text text-transparent dark:from-fuchsia-400 dark:via-violet-400 dark:to-cyan-300">
+              occasions
+            </span>
+          </h2>
+        </div>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { icon: 'cake', tint: 'from-fuchsia-500 to-pink-500', title: 'Birthdays', body: 'Rally the group and land the gift before the cake is cut.' },
+            { icon: 'suitcase', tint: 'from-violet-500 to-indigo-500', title: 'Farewells', body: 'Send them off with notes and tokens they keep forever.' },
+            { icon: 'trophy', tint: 'from-amber-500 to-orange-500', title: 'Big wins', body: 'New job, new baby, new home. Celebrate it together.' },
+            { icon: 'flower', tint: 'from-cyan-500 to-sky-500', title: 'Just because', body: 'No reason needed. Chip in and make someone smile.' },
+          ].map((c) => (
+            <div
+              key={c.title}
+              className="press rounded-2xl border border-white/60 bg-white/80 p-5 shadow-sm backdrop-blur-xl transition-shadow hover:shadow-lg hover:shadow-violet-500/10 dark:border-white/10 dark:bg-stone-950/70"
+            >
+              <span className={cx('flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-md', c.tint)}>
+                <Icon name={c.icon as 'cake'} className="h-6 w-6" />
+              </span>
+              <h3 className="font-display mt-3 text-lg font-semibold">{c.title}</h3>
+              <p className="mt-1.5 text-sm text-stone-600 dark:text-stone-400">{c.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Proof band ───────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden px-4 py-16">
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute left-1/4 top-0 h-64 w-64 animate-blob rounded-full bg-fuchsia-400/30 blur-3xl dark:bg-fuchsia-600/20" />
+          <div className="absolute right-1/4 bottom-0 h-64 w-64 animate-blob rounded-full bg-cyan-400/30 blur-3xl [animation-delay:-7s] dark:bg-cyan-500/15" />
+        </div>
+        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-3">
+          {[
+            { icon: 'shield', k: '0', v: 'servers holding your money' },
+            { icon: 'bolt', k: 'P2P', v: 'gifts wallet-to-wallet' },
+            { icon: 'check', k: '100%', v: 'gifts verifiable on-network' },
+          ].map((s) => (
+            <div
+              key={s.v}
+              className="rounded-2xl border border-white/60 bg-white/80 p-6 text-center shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-stone-950/70"
+            >
+              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-violet-500 text-white shadow-md shadow-violet-500/25">
+                <Icon name={s.icon as 'shield'} className="h-6 w-6" />
+              </span>
+              <div className="font-display mt-3 text-3xl font-bold">{s.k}</div>
+              <div className="mt-1 text-sm text-stone-600 dark:text-stone-400">{s.v}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Final CTA ────────────────────────────────────────────────── */}
+      <section className="mx-auto max-w-4xl px-4 py-16">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-fuchsia-600 via-violet-600 to-cyan-500 p-[2px] shadow-2xl shadow-violet-600/30">
+          <div className="relative overflow-hidden rounded-[calc(2rem-2px)] bg-gradient-to-br from-fuchsia-600 via-violet-600 to-cyan-500 px-6 py-12 text-center text-white sm:px-12 sm:py-16">
+            <Icon name="sparkles" className="absolute right-6 top-6 h-10 w-10 animate-float-slow text-white/40" />
+            <Icon name="coin" className="absolute bottom-6 left-6 h-10 w-10 animate-float text-white/30" />
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">Ready to make someone's day?</h2>
+            <p className="mx-auto mt-3 max-w-lg text-white/85">
+              Start a card in under a minute. Share one link, and let everyone chip in with a note
+              and real tokens.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link
+                to="/create"
+                className="press inline-flex items-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-lg font-bold text-violet-700 shadow-lg hover:bg-white/90"
+              >
+                Start a card
+                <Icon name="arrowRight" className="h-5 w-5" />
+              </Link>
+              <Link
+                to="/wallet"
+                className="press inline-flex items-center gap-2 rounded-2xl border border-white/50 px-7 py-3.5 text-lg font-semibold text-white hover:bg-white/10"
+              >
+                <Icon name="wallet" className="h-5 w-5" />
+                Set up wallet
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Footer ───────────────────────────────────────────────────── */}
       <footer className="mx-auto max-w-4xl px-4 py-10 text-center text-sm text-stone-500 dark:text-stone-400">
         <p>

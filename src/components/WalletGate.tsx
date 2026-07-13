@@ -3,11 +3,13 @@
  * mount, shows progress/error states, and enforces the first-run mnemonic
  * backup before letting the user continue.
  */
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { retryPendingSignatures } from '../sphere/cards';
+import { hasStoredWallet } from '../sphere/client';
 import { useWallet } from '../store';
 import { MnemonicBackup } from './MnemonicBackup';
+import { WalletWelcome } from './WalletOnboard';
 import { ErrorNote, Spinner } from './ui';
 
 let retriedPending = false;
@@ -15,10 +17,14 @@ let retriedPending = false;
 export function WalletGate({ children }: { children: ReactNode }) {
   const { status, error, needsBackup, init, confirmBackup } = useWallet();
   const navigate = useNavigate();
+  // Returning visitors already have a wallet in this browser - load it silently.
+  // Brand-new visitors get a choice (create vs restore) and we only generate
+  // keys once they pick "create"; we never auto-create behind their back.
+  const [chosen, setChosen] = useState(() => hasStoredWallet());
 
   useEffect(() => {
-    void init();
-  }, [init]);
+    if (chosen) void init();
+  }, [chosen, init]);
 
   useEffect(() => {
     // One shot per session: re-post any signature whose payment already
@@ -30,6 +36,10 @@ export function WalletGate({ children }: { children: ReactNode }) {
       });
     }
   }, [status]);
+
+  if (!chosen) {
+    return <WalletWelcome onCreate={() => setChosen(true)} />;
+  }
 
   if (status === 'error') {
     return (

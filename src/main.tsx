@@ -1,3 +1,4 @@
+import './polyfills';
 import '@fontsource-variable/fraunces';
 import '@fontsource-variable/inter';
 import './index.css';

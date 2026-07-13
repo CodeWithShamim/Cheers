@@ -4,6 +4,13 @@ import { ShareSheet } from '../components/ShareSheet';
 import { ThemePicker } from '../components/ThemePicker';
 import { Button, ErrorNote, Field, Spinner, cx, inputClass } from '../components/ui';
 import { Icon } from '../components/Icon';
+import {
+  FeatureRow,
+  GlowCard,
+  GradientHeading,
+  Pill,
+  SplitPage,
+} from '../components/Web3Layout';
 import { safeParseUct } from '../lib/amounts';
 import { toHumanError } from '../lib/errors';
 import { OCCASIONS, type Occasion } from '../protocol';
@@ -66,44 +73,73 @@ function CreateWizard() {
 
   if (created) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-10">
-        <div className="text-center">
-          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-500 text-white shadow-lg shadow-violet-500/30">
-            <Icon name="sparkles" className="h-8 w-8" />
-          </span>
-          <h1 className="font-display mt-3 text-3xl font-bold">The card is live!</h1>
-          <p className="mt-2 text-stone-600 dark:text-stone-400">
-            Share this link with everyone who should sign - every signature and gift lands on the
-            card in real time.
-          </p>
-          {!created.dmSent && (
-            <p className="mx-auto mt-3 max-w-md rounded-xl bg-amber-100 px-4 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
-              Heads-up: we couldn't DM the recipient the link automatically - send it to them
-              yourself when the card is ready to open.
+      <SplitPage
+        aside={
+          <div className="max-w-md">
+            <Pill icon="sparkles">Card is live on-network</Pill>
+            <GradientHeading>The card is live!</GradientHeading>
+            <p className="mt-5 text-lg text-stone-600 dark:text-stone-300">
+              Share this link with everyone who should sign. Every signature and gift lands on the
+              card in real time, straight in the recipient's wallet.
             </p>
-          )}
-        </div>
-        <div className="mt-8">
-          <ShareSheet url={created.url} title={titleValue} />
-        </div>
-        <div className="mt-8 flex justify-center gap-3">
-          <a href={created.url}>
-            <Button>Open the card</Button>
-          </a>
-        </div>
-      </div>
+            <div className="mt-8 grid gap-4">
+              <FeatureRow icon="link" k="One link" v="drop it in any group chat" />
+              <FeatureRow icon="bolt" k="Real time" v="notes appear as friends sign" />
+              <FeatureRow icon="gift" k="Auto-DM'd" v="the recipient gets it when ready" />
+            </div>
+          </div>
+        }
+      >
+        <GlowCard glow="fuchsia" className="p-6 sm:p-8">
+          <div className="text-center">
+            <span className="mx-auto flex h-16 w-16 animate-float-slow items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-500 text-white shadow-lg shadow-violet-500/30">
+              <Icon name="sparkles" className="h-8 w-8" />
+            </span>
+            <h2 className="font-display mt-3 text-2xl font-bold">Ready to share</h2>
+            <p className="mt-2 text-sm text-stone-600 dark:text-stone-400">
+              Copy the link below and send it to everyone who should sign.
+            </p>
+            {!created.dmSent && (
+              <p className="mx-auto mt-3 max-w-md rounded-xl bg-amber-100 px-4 py-2 text-sm text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+                Heads-up: we couldn't DM the recipient the link automatically - send it to them
+                yourself when the card is ready to open.
+              </p>
+            )}
+          </div>
+          <div className="mt-6">
+            <ShareSheet url={created.url} title={titleValue} />
+          </div>
+          <div className="mt-6 flex justify-center gap-3">
+            <a href={created.url}>
+              <Button>Open the card</Button>
+            </a>
+          </div>
+        </GlowCard>
+      </SplitPage>
     );
   }
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-10">
-      <h1 className="font-display text-3xl font-bold">Start a card</h1>
-      <p className="mt-1 text-stone-600 dark:text-stone-400">
-        One link, endless signatures, gifts straight to their wallet.
-      </p>
-
+    <SplitPage
+      aside={
+        <div className="max-w-md">
+          <Pill icon="pen">Start a group card</Pill>
+          <GradientHeading>One link, everyone chips in</GradientHeading>
+          <p className="mt-5 text-lg text-stone-600 dark:text-stone-300">
+            Set who it's for, the occasion, and a look. You get a single link to share. Friends sign
+            it with a note and send tokens straight to their wallet.
+          </p>
+          <div className="mt-8 grid gap-4">
+            <FeatureRow icon="users" k="Everyone together" v="unlimited signers on one card" />
+            <FeatureRow icon="bolt" k="Wallet-to-wallet" v="gifts land instantly, peer-to-peer" />
+            <FeatureRow icon="shield" k="Yours only" v="keys never leave this browser" />
+          </div>
+        </div>
+      }
+    >
+      <GlowCard className="p-6 sm:p-8">
       <form
-        className="mt-8 space-y-6"
+        className="space-y-6"
         onSubmit={async (e) => {
           e.preventDefault();
           if (!canCreate || resolveState.kind !== 'found') return;
@@ -245,6 +281,7 @@ function CreateWizard() {
           {creating ? 'Creating the card on the network…' : 'Create card & get share link'}
         </Button>
       </form>
-    </div>
+      </GlowCard>
+    </SplitPage>
   );
 }

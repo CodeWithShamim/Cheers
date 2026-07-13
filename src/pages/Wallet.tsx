@@ -4,6 +4,7 @@ import { MnemonicBackup } from '../components/MnemonicBackup';
 import { WalletGate } from '../components/WalletGate';
 import { Button, CopyButton, ErrorNote, Field, cx, inputClass } from '../components/ui';
 import { Icon } from '../components/Icon';
+import { FeatureRow, GradientHeading, Pill, SplitPage } from '../components/Web3Layout';
 import { toHumanError } from '../lib/errors';
 import { logoutWallet, restoreFromMnemonic } from '../sphere/client';
 import { checkNametag, isMnemonicValid, mintUct, registerNametag } from '../sphere/wallet';
@@ -26,16 +27,30 @@ function WalletBody() {
   const [showRestore, setShowRestore] = useState(params.get('restore') === '1');
 
   return (
-    <div className="mx-auto max-w-xl space-y-8 px-4 py-10">
-      <div>
-        <h1 className="font-display text-3xl font-bold">Your wallet</h1>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
-          Created and stored only in this browser. Testnet2 - tokens have no real value.
-        </p>
-      </div>
-
+    <SplitPage
+      aside={
+        <div className="max-w-md">
+          <Pill icon="wallet">In-browser wallet</Pill>
+          <GradientHeading>Your keys, your tokens</GradientHeading>
+          <p className="mt-5 text-lg text-stone-600 dark:text-stone-300">
+            Created and stored only in this browser. Claim a nametag so friends can gift you, mint
+            test UCT any time, and back it up whenever you like. Testnet2 tokens have no real value.
+          </p>
+          <div className="mt-8 grid gap-4">
+            <FeatureRow icon="shield" k="Self-custodied" v="keys never leave this device" />
+            <FeatureRow icon="bolt" k="Mint on demand" v="no faucet, mint your own UCT" />
+            <FeatureRow icon="link" k="Nametag" v="get gifts sent to @you" />
+          </div>
+          <div className="mt-8 flex items-center gap-2 rounded-2xl border border-amber-300/60 bg-amber-50/70 px-4 py-3 text-sm font-semibold text-amber-800 backdrop-blur dark:border-amber-500/25 dark:bg-amber-500/10 dark:text-amber-300">
+            <Icon name="star" className="h-4 w-4 shrink-0" />
+            Save your recovery phrase. It's the only way back in.
+          </div>
+        </div>
+      }
+    >
+    <div className="space-y-6">
       {/* Identity */}
-      <section className="space-y-4 rounded-2xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900">
+      <section className="space-y-4 rounded-2xl border border-white/60 bg-white/80 p-5 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-stone-950/70">
         <h2 className="font-display text-lg font-semibold">Identity</h2>
         <div>
           <span className="text-xs font-semibold uppercase tracking-wide text-stone-400">L3 address</span>
@@ -50,7 +65,7 @@ function WalletBody() {
       </section>
 
       {/* Balances */}
-      <section className="space-y-4 rounded-2xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900">
+      <section className="space-y-4 rounded-2xl border border-white/60 bg-white/80 p-5 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-stone-950/70">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg font-semibold">Balances</h2>
           <Button variant="ghost" onClick={() => void refreshAssets()}>
@@ -77,7 +92,7 @@ function WalletBody() {
       </section>
 
       {/* Backup & restore */}
-      <section className="space-y-4 rounded-2xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900">
+      <section className="space-y-4 rounded-2xl border border-white/60 bg-white/80 p-5 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-stone-950/70">
         <h2 className="font-display text-lg font-semibold">Backup & restore</h2>
         {showBackup ? (
           <MnemonicBackup onConfirmed={() => setShowBackup(false)} />
@@ -99,6 +114,7 @@ function WalletBody() {
       {/* Sign out */}
       <LogoutSection />
     </div>
+    </SplitPage>
   );
 }
 
@@ -107,7 +123,7 @@ function LogoutSection() {
   const [busy, setBusy] = useState(false);
 
   return (
-    <section className="space-y-4 rounded-2xl border border-red-200 bg-white p-5 dark:border-red-900/50 dark:bg-stone-900">
+    <section className="space-y-4 rounded-2xl border border-red-200 bg-white/80 p-5 shadow-sm backdrop-blur-xl dark:border-red-900/50 dark:bg-stone-950/70">
       <h2 className="font-display text-lg font-semibold text-red-800 dark:text-red-300">Sign out</h2>
       {confirming ? (
         <div className="space-y-4">
